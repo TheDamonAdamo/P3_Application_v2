@@ -8,21 +8,24 @@ from screens.tournaments.advance_round import AdvanceRoundScreen
 from screens.tournaments.report import TournamentReportScreen
 
 from models.player import Player
-from screens import clubs  # use clubs.py from screens package
+from models.club_manager import ClubManager
 
 
 def load_all_players():
+    manager = ClubManager()
     all_players = []
-    club_data = clubs.load_clubs()
-    for club in club_data:
-        for p in club["players"]:
-            player = Player(
+    for club in manager.clubs:
+        '''
+        for p in club.players:
+            all_players.append(Player(
                 name=p["name"],
                 email=p["email"],
                 chess_id=p["chess_id"],
                 birthdate=p["birthdate"]
-            )
-            all_players.append(player)
+            ))
+        '''
+        for p in club.players:
+            all_players.append(p)
     return all_players
 
 def tournament_menu(tournament, all_players):
@@ -62,7 +65,7 @@ def main():
 
     while True:
         print("\nTournaments:")
-        for i, t in enumerate(sorted(tournaments, key=lambda t: t.start_date, reverse=True)):
+        for i, t in enumerate(sorted(tournaments, key=lambda t: t.start_date, reverse=True), 1):
             print(f"[{i}] {t.name} ({t.start_date} - {t.end_date})")
         print("[N] New Tournament")
         print("[Q] Quit")
