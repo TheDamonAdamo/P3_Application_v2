@@ -1,7 +1,7 @@
-import json
 from dataclasses import dataclass, field
 from typing import List, Optional
 from models.round import Round
+import json
 
 @dataclass
 class Tournament:
@@ -19,17 +19,19 @@ class Tournament:
         return {
             "name": self.name,
             "venue": self.venue,
-            "dates": {"from": self.start_date, "to": self.end_date},
+            "dates": {
+                "from": self.start_date,
+                "to": self.end_date
+            },
             "number_of_rounds": self.number_of_rounds,
             "current_round": self.current_round,
             "completed": self.completed,
             "players": self.players,
-            "rounds": [r.to_dict() for r in self.rounds]
+            "rounds": [round_.to_dict() for round_ in self.rounds]
         }
 
     @staticmethod
     def from_dict(data):
-        from models.round import Round
         rounds = [Round.from_dict(r, i + 1) for i, r in enumerate(data.get("rounds", []))]
         return Tournament(
             name=data["name"],
