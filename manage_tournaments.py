@@ -1,3 +1,4 @@
+# manage_tournament.py
 from commands.tournaments import load_all_tournaments, get_tournament_by_id, advance_round
 from commands.create_tournaments import create_tournament, save_tournament
 from screens.tournaments.create import CreateTournamentScreen
@@ -34,6 +35,7 @@ def tournament_menu(tournament, all_players):
         print("4. Generate Report")
         if not is_completed:
             print("5. Save & Return to Main Menu")
+        print("6. Return to Main Menu (without saving)")
         choice = input("Select action: ")
 
         if choice == "1" and not tournament.completed:
@@ -47,6 +49,9 @@ def tournament_menu(tournament, all_players):
             TournamentReportScreen(tournament).show()
         elif choice == "5":
             save_tournament(tournament)
+            break
+        elif choice == "6":
+            print("Returning to main menu without saving...")
             break
         else:
             print("Invalid choice.")
