@@ -15,35 +15,32 @@ def load_all_players():
     manager = ClubManager()
     all_players = []
     for club in manager.clubs:
-        '''
-        for p in club.players:
-            all_players.append(Player(
-                name=p["name"],
-                email=p["email"],
-                chess_id=p["chess_id"],
-                birthdate=p["birthdate"]
-            ))
-        '''
         for p in club.players:
             all_players.append(p)
     return all_players
 
+
 def tournament_menu(tournament, all_players):
     while True:
         ViewTournamentScreen(tournament).show()
+        is_completed = tournament.completed
         print("\nActions:")
-        print("1. Register Player")
-        print("2. Enter Match Results")
-        print("3. Advance to Next Round")
+        if not is_completed:
+            print("1. Register Player")
+        if not is_completed:
+            print("2. Enter Match Results")
+        if not is_completed:
+            print("3. Advance to Next Round")
         print("4. Generate Report")
-        print("5. Save & Return to Main Menu")
+        if not is_completed:
+            print("5. Save & Return to Main Menu")
         choice = input("Select action: ")
 
-        if choice == "1":
+        if choice == "1" and not tournament.completed:
             RegisterPlayerScreen(tournament, all_players).show()
-        elif choice == "2":
+        elif choice == "2" and not tournament.completed:
             EnterResultsScreen(tournament).show()
-        elif choice == "3":
+        elif choice == "3" and not tournament.completed:
             if AdvanceRoundScreen(tournament).show():
                 advance_round(tournament)
         elif choice == "4":
@@ -54,19 +51,20 @@ def tournament_menu(tournament, all_players):
         else:
             print("Invalid choice.")
 
+
 def main():
     print("=== Chess Tournament Manager ===")
     tournaments = load_all_tournaments()
     all_players = load_all_players()
 
-    if len(tournaments) == 1 and not tournaments[0].completed:
-        tournament_menu(tournaments[0], all_players)
-        return
-
     while True:
         print("\nTournaments:")
-        for i, t in enumerate(sorted(tournaments, key=lambda t: t.start_date, reverse=True), 1):
-            print(f"[{i}] {t.name} ({t.start_date} - {t.end_date})")
+        in_progress = sorted([t for t in tournaments if not t.completed], key=lambda t: t.start_date, reverse=True)
+        completed = sorted([t for t in tournaments if t.completed], key=lambda t: t.start_date, reverse=True)
+        sorted_tournaments = in_progress + completed
+        for i, t in enumerate(sorted_tournaments, start=1):
+            status = "In Progress" if not t.completed else "Completed"
+            print(f"[{i}] {t.name} ({t.start_date} - {t.end_date}) [{status}]")
         print("[N] New Tournament")
         print("[Q] Quit")
 
@@ -86,11 +84,12 @@ def main():
             tournament_menu(new_tournament, all_players)
         elif choice.isdigit():
             tid = int(choice)
-            selected = get_tournament_by_id(tournaments, tid)
+            selected = get_tournament_by_id(sorted_tournaments, tid - 1)
             if selected:
                 tournament_menu(selected, all_players)
         else:
             print("Invalid input.")
+
 
 if __name__ == "__main__":
     main()
