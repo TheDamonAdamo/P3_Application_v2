@@ -12,7 +12,7 @@ class PlayerDirectory:
             for player in club.players:
                 if player.chess_id not in self.directory:
                     self.directory[player.chess_id] = (player, club_name)
-                    print(f"Loaded player: {player.name}, ID: {player.chess_id}, Club: {club_name}")
+                    #print(f"Loaded player: {player.name}, ID: {player.chess_id}, Club: {club_name}")
                 else:
                     print(f"[WARN] Duplicate chess_id detected: {player.chess_id}")
 

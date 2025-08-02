@@ -25,7 +25,7 @@ def tournament_menu(tournament, all_players):
         ViewTournamentScreen(tournament).show()
         is_completed = tournament.completed
         print("\nActions:")
-        if not is_completed:
+        if not is_completed and tournament.current_round is None:
             print("1. Register Player")
         if not is_completed:
             print("2. Enter Match Results")
@@ -33,11 +33,11 @@ def tournament_menu(tournament, all_players):
             print("3. Advance to Next Round")
         print("4. Generate Report")
         if not is_completed:
-            print("5. Save & Return to Main Menu")
-        print("6. Return to Main Menu (without saving)")
-        choice = input("Select action: ")
+            print("S. Save & Return to Main Menu")
+        print("B. Return to Main Menu (without saving)")
+        choice = input("Select action: ").strip().lower()
 
-        if choice == "1" and not tournament.completed:
+        if choice == "1" and not tournament.completed and tournament.current_round is None:
             RegisterPlayerScreen(tournament, all_players).show()
         elif choice == "2" and not tournament.completed:
             EnterResultsScreen(tournament).show()
@@ -46,10 +46,10 @@ def tournament_menu(tournament, all_players):
                 advance_round(tournament)
         elif choice == "4":
             TournamentReportScreen(tournament).show()
-        elif choice == "5":
+        elif choice == "s":
             save_tournament(tournament)
             break
-        elif choice == "6":
+        elif choice == "b":
             print("Returning to main menu without saving...")
             break
         else:

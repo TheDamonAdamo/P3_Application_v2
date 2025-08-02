@@ -12,10 +12,6 @@ class ClubManager:
             if filepath.is_file() and filepath.suffix == ".json":
                 try:
                     club = ChessClub(filepath=filepath)
-                    if not club.name:
-                        print(f"[DEBUG] Club at {filepath} is missing a name!")
-                    else:
-                        print(f"[DEBUG] Loaded club: {club.name}")
                     self.clubs.append(club)
                 except json.JSONDecodeError:
                     print(filepath, "is invalid JSON file.")
