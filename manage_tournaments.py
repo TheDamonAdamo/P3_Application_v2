@@ -6,7 +6,7 @@ from screens.tournaments.view import ViewTournamentScreen
 from screens.tournaments.register_player import RegisterPlayerScreen
 from screens.tournaments.enter_results import EnterResultsScreen
 from screens.tournaments.advance_round import AdvanceRoundScreen
-from screens.tournaments.report3 import TournamentReportScreen
+from screens.tournaments.report import TournamentReportScreen
 
 from models.club_manager import ClubManager
 
