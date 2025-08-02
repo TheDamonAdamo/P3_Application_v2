@@ -38,10 +38,11 @@ class TournamentReportScreen:
             if self.tournament.completed:
                 points = {pid: 0 for pid in self.tournament.players}
                 for round_ in self.tournament.rounds:
-                    for match in round_:
-                        p1, p2 = match["players"]
-                        winner = match.get("winner")
-                        completed = match.get("completed")
+                    for match in round_.matches:
+                        p1 = match.player1_id
+                        p2 = match.player2_id
+                        winner = match.winner
+                        completed = match.completed
                         if not completed:
                             continue
                         if winner is None:
@@ -61,7 +62,8 @@ class TournamentReportScreen:
             for i, round_ in enumerate(self.tournament.rounds, start=1):
                 print(f"\n--- Round {i} ---")
                 for j, match in enumerate(round_.matches, start=1):
-                    p1, p2 = match.players
+                    p1 = match.player1
+                    p2 = match.player2
                     winner = match.winner
                     completed = match.completed
 
