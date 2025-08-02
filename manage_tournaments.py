@@ -7,16 +7,25 @@ from screens.tournaments.enter_results import EnterResultsScreen
 from screens.tournaments.advance_round import AdvanceRoundScreen
 from screens.tournaments.report import TournamentReportScreen
 
-# Dummy player list (you can replace with actual player loading from clubs)
 from models.player import Player
-all_players = [
-    Player(name="Alice", email="a@example.com", chess_id="AB12345", birthdate="01-01-1990"),
-    Player(name="Bob", email="b@example.com", chess_id="CD67890", birthdate="02-02-1991"),
-    Player(name="Clara", email="c@example.com", chess_id="EF11223", birthdate="03-03-1992"),
-    Player(name="Dan", email="d@example.com", chess_id="GH44556", birthdate="04-04-1993"),
-]
+from screens import clubs  # use clubs.py from screens package
 
-def tournament_menu(tournament):
+
+def load_all_players():
+    all_players = []
+    club_data = clubs.load_clubs()
+    for club in club_data:
+        for p in club["players"]:
+            player = Player(
+                name=p["name"],
+                email=p["email"],
+                chess_id=p["chess_id"],
+                birthdate=p["birthdate"]
+            )
+            all_players.append(player)
+    return all_players
+
+def tournament_menu(tournament, all_players):
     while True:
         ViewTournamentScreen(tournament).show()
         print("\nActions:")
@@ -45,9 +54,10 @@ def tournament_menu(tournament):
 def main():
     print("=== Chess Tournament Manager ===")
     tournaments = load_all_tournaments()
+    all_players = load_all_players()
 
     if len(tournaments) == 1 and not tournaments[0].completed:
-        tournament_menu(tournaments[0])
+        tournament_menu(tournaments[0], all_players)
         return
 
     while True:
@@ -70,12 +80,12 @@ def main():
                 end=form["end"],
                 rounds=form["rounds"]
             )
-            tournament_menu(new_tournament)
+            tournament_menu(new_tournament, all_players)
         elif choice.isdigit():
             tid = int(choice)
             selected = get_tournament_by_id(tournaments, tid)
             if selected:
-                tournament_menu(selected)
+                tournament_menu(selected, all_players)
         else:
             print("Invalid input.")
 
