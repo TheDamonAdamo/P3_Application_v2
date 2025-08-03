@@ -1,0 +1,6 @@
+# Application dependencies
+# (Add standard library dependencies here if any are installed externally)
+
+# Development / Code Quality
+flake8>=6.1.0
+flake8-html>=0.4.3
