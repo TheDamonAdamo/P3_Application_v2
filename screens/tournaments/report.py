@@ -44,10 +44,10 @@ class TournamentReportScreen:
 
         # --- Match Results and Standings Per Round ---
         print("\nMatch Results:")
-        cumulative_points = {pid: 0 for pid in self.tournament.players}
 
         for i, round_ in enumerate(self.tournament.rounds, start=1):
             print(f"\n--- Round {i} ---")
+            round_points = {pid: 0 for pid in self.tournament.players}
             for j, match in enumerate(round_.matches, start=1):
                 p1_id = match.player1_id
                 p2_id = match.player2_id
@@ -71,13 +71,13 @@ class TournamentReportScreen:
 
                 print(f"  Match {j}: {p1_name} vs. {p2_name} → {result}")
 
-                # Update cumulative points for this round only
+                # Calculate round-specific points
                 for pid, pts in match.get_points().items():
-                    cumulative_points[pid] += pts
+                    round_points[pid] += pts
 
-            # Standings after this round (based on cumulative points so far)
+            # Standings after this round only
             print("\nStandings after Round {0}:".format(i))
-            sorted_round = sorted(cumulative_points.items(), key=lambda x: x[1], reverse=True)
+            sorted_round = sorted(round_points.items(), key=lambda x: x[1], reverse=True)
             print(f"{'Rank':<5} {'Name':<25} {'Points'}")
             print("-" * 40)
             for rank, (cid, pts) in enumerate(sorted_round, start=1):
