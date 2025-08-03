@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+
 from .club import ChessClub
 
 
@@ -12,7 +13,8 @@ class ClubManager:
         for filepath in datadir.iterdir():
             if filepath.is_file() and filepath.suffix == ".json":
                 try:
-                    self.clubs.append(ChessClub(filepath))
+                    club = ChessClub(filepath=filepath)
+                    self.clubs.append(club)
                 except json.JSONDecodeError:
                     print(filepath, "is invalid JSON file.")
 

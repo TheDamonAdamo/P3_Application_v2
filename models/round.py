@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List
 from models.match import Match
 
+
 @dataclass
 class Round:
     matches: List[Match]

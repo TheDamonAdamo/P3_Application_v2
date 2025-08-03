@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 119
+exclude =
+    .git,
+    __pycache__,
+    venv,
+    env,
+    flake8_report,
+    data,
+    *.json
+
+# Optional:
+# Ignore specific errors (uncomment and customize as needed)
+# ignore = E203, W503

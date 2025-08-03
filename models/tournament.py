@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 from models.round import Round
-import json
+
 
 @dataclass
 class Tournament:
