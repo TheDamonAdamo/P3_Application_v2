@@ -1,5 +1,6 @@
 from models.player_directory import PlayerDirectory
 
+
 class ViewTournamentScreen:
     def __init__(self, tournament):
         self.tournament = tournament

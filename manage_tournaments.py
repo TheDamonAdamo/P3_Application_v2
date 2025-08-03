@@ -58,7 +58,12 @@ def tournament_menu(tournament, all_players):
                 status = "Start Tournament Not available: not enough players to start"
             else:
                 status = "Start Tournament"
-        elif is_completed or (current_round == tournament.number_of_rounds and all(match.completed for match in tournament.rounds[-1].matches)):
+        elif (
+            is_completed or (
+                current_round == tournament.number_of_rounds and
+                all(match.completed for match in tournament.rounds[-1].matches)
+            )
+        ):
             status = "Advance to Next Round (Not available: tournament completed)"
         else:
             last_round = tournament.rounds[-1]
@@ -83,8 +88,6 @@ def tournament_menu(tournament, all_players):
                 RegisterPlayerScreen(tournament, all_players).show()
             else:
                 print("Cannot register players: tournament has started or is complete.")
-
-
         elif choice == "2":
             if current_round is not None and not is_completed:
                 EnterResultsScreen(tournament).show()
@@ -129,6 +132,7 @@ def tournament_menu(tournament, all_players):
             break
         else:
             print("Invalid choice.")
+
 
 def main():
     print("=== Chess Tournament Manager ===")

@@ -1,11 +1,13 @@
 import subprocess
 import sys
 
+
 def run_script(script_name):
     try:
         subprocess.run([sys.executable, script_name], check=True)
     except subprocess.CalledProcessError:
         print(f"Error running {script_name}")
+
 
 def main():
     while True:
@@ -25,6 +27,7 @@ def main():
             break
         else:
             print("Invalid input. Please try again.")
+
 
 if __name__ == "__main__":
     main()

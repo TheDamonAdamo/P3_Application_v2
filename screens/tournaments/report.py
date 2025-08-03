@@ -1,5 +1,6 @@
-from models.club_manager import ClubManager
+
 from models.player_directory import PlayerDirectory
+
 
 class TournamentReportScreen:
     def __init__(self, tournament):

@@ -7,8 +7,7 @@ class RegisterPlayerScreen:
         print("\n=== Register a Player ===")
         query = input("Enter name or chess ID: ").lower()
         matches = [p for p in self.all_players if query in p.chess_id.lower() or query in p.name.lower()]
-        for idx, p in enumerate((matches),1):
-        #for idx, p in enumerate(matches):
+        for idx, p in enumerate((matches), 1):
             print(f"[{idx}] {p.chess_id} - {p.name}")
         choice = int(input("Select a player to register (number): "))
         selected = matches[choice-1]

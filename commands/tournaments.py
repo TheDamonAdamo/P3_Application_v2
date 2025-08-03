@@ -6,6 +6,7 @@ from models.match import Match
 from models.round import Round
 from models.player_directory import PlayerDirectory
 
+
 def load_all_tournaments():
     tournaments = []
     folder = os.path.join("data", "tournaments")
@@ -18,10 +19,12 @@ def load_all_tournaments():
                 tournaments.append(Tournament.from_dict(data))
     return tournaments
 
+
 def get_tournament_by_id(tournaments, selection):
     if 0 <= selection < len(tournaments):
         return tournaments[selection]
     return None
+
 
 def generate_next_round(tournament):
     scores = tournament.get_scores()
@@ -51,6 +54,7 @@ def generate_next_round(tournament):
     tournament.rounds.append(new_round)
     tournament.current_round = round_number
 
+
 def enter_match_results(tournament, match_results):
     if not tournament.rounds:
         return
@@ -64,19 +68,8 @@ def enter_match_results(tournament, match_results):
         else:
             match.winner = None
         match.completed = True
-"""
-def advance_round(tournament):
-    if tournament.current_round is not None:
-        current = tournament.rounds[-1]
-        if not current.is_completed():
-            return False  # Cannot advance until current round is done
-    if len(tournament.rounds) >= tournament.number_of_rounds:
-        tournament.completed = True
-        tournament.current_round = None
-    else:
-        generate_next_round(tournament)
-    return True
-"""
+
+
 def advance_round(tournament):
     directory = PlayerDirectory()
 

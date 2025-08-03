@@ -1,7 +1,9 @@
 import json
 from pathlib import Path
 
+
 from .club import ChessClub
+
 
 class ClubManager:
     def __init__(self, data_folder="data/clubs"):
