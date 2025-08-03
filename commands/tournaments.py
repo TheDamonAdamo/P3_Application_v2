@@ -4,6 +4,7 @@ import random
 from models.tournament import Tournament
 from models.match import Match
 from models.round import Round
+from models.player_directory import PlayerDirectory
 
 def load_all_tournaments():
     tournaments = []
@@ -63,7 +64,7 @@ def enter_match_results(tournament, match_results):
         else:
             match.winner = None
         match.completed = True
-
+"""
 def advance_round(tournament):
     if tournament.current_round is not None:
         current = tournament.rounds[-1]
@@ -75,3 +76,82 @@ def advance_round(tournament):
     else:
         generate_next_round(tournament)
     return True
+"""
+def advance_round(tournament):
+    directory = PlayerDirectory()
+
+    # Prevent advancing if current round has incomplete matches
+    if tournament.rounds:
+        last_round = tournament.rounds[-1]
+        if any(not match.completed for match in last_round.matches):
+            print("Cannot advance: not all matches in the current round are completed.")
+            return
+
+    if tournament.current_round is None:
+        # --- First round: random pairing across clubs ---
+        club_map = {}
+        for pid in tournament.players:
+            _, club = directory.get(pid)
+            club_map.setdefault(club, []).append(pid)
+
+        all_players = [(club, pid) for club, pids in club_map.items() for pid in pids]
+        random.shuffle(all_players)
+        matches = []
+        used = set()
+
+        while len(used) < len(tournament.players):
+            for i in range(len(all_players)):
+                if all_players[i][1] in used:
+                    continue
+                for j in range(i + 1, len(all_players)):
+                    if all_players[j][1] in used:
+                        continue
+                    if all_players[i][0] != all_players[j][0]:
+                        p1 = all_players[i][1]
+                        p2 = all_players[j][1]
+                        matches.append(Match(player1_id=p1, player2_id=p2))
+                        used.update({p1, p2})
+                        break
+                break  # outer loop restart
+
+        new_round = Round(matches=matches, round_number=1)
+        tournament.rounds.append(new_round)
+        tournament.current_round = 1
+
+    else:
+        # --- Later rounds: score-based Swiss pairing ---
+        # Calculate current points
+        points = {pid: 0 for pid in tournament.players}
+        played_matches = set()
+
+        for rnd in tournament.rounds:
+            for match in rnd.matches:
+                played_matches.add(frozenset([match.player1_id, match.player2_id]))
+                for pid, pts in match.get_points().items():
+                    points[pid] += pts
+
+        # Sort by points (break ties randomly)
+        players = list(tournament.players)
+        random.shuffle(players)
+        players.sort(key=lambda pid: points[pid], reverse=True)
+
+        matches = []
+        used = set()
+        while players:
+            p1 = players.pop(0)
+            if p1 in used:
+                continue
+
+            for i, p2 in enumerate(players):
+                if frozenset([p1, p2]) not in played_matches:
+                    matches.append(Match(player1_id=p1, player2_id=p2))
+                    used.update({p1, p2})
+                    players.pop(i)
+                    break
+
+        new_round = Round(matches=matches, round_number=tournament.current_round + 1)
+        tournament.rounds.append(new_round)
+        tournament.current_round += 1
+
+    if tournament.current_round >= tournament.number_of_rounds:
+        tournament.completed = True
