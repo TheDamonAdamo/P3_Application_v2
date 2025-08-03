@@ -1,4 +1,3 @@
-# manage_tournament.py
 from commands.tournaments import load_all_tournaments, get_tournament_by_id, advance_round
 from commands.create_tournaments import create_tournament, save_tournament
 from screens.tournaments.create import CreateTournamentScreen
